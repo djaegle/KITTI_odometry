@@ -3,8 +3,6 @@ require 'torch'
 require 'image'
 require 'paths'
 
-local debugger = require('fb.debugger')
-
 -- My modules
 local util = require('util')
 

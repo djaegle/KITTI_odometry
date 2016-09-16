@@ -1,7 +1,7 @@
 # Training and testing models for end-to-end KITTI odometry in Torch.
 
 Non-standard dependencies:
-Torch packages [matio](https://github.com/soumith/matio-ffi.torch)
+Torch package [matio](https://github.com/soumith/matio-ffi.torch)
 
 Uses trajectory-graph-based sequence augmentation. Several architectural types are included.
 

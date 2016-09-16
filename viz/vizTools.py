@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 from __future__ import division
 import numpy as np
+from scipy.io import loadmat
 import h5py
 import os
 from os.path import join
@@ -78,7 +79,7 @@ def filterPathTransforms(estimate_trajectory, gt_trajectory, camera_type, adjace
     Optional argument camera sets which camera will be used (1 or 2)
     """
 
-    valid_inds = np.logical_and(camera_type == camera,adjacent_ims==1)
+    valid_inds = np.squeeze(np.logical_and(camera_type == camera,adjacent_ims==1))
 
     sort_order = np.argsort(start_im[valid_inds])
 
@@ -153,20 +154,20 @@ def getRawErrors(estimates,ground_truth):
 
 
 def main(file_path):
-    estimate_data = h5py.File(file_path,'r')
-    estimates = estimate_data['estimates'][:]
-    ground_truth = estimate_data['groundTruth'][:]
-    camera_type = estimate_data['cameraType'][:]
-    adjacent_ims = estimate_data['adjacentIms'][:]
-    start_im = estimate_data['startIm'][:]
-    kitti_poses = estimate_data['rawPose'][:][:,3::4]
+    estimate_data = loadmat(file_path)
+    estimates = estimate_data['estimates']
+    ground_truth = estimate_data['groundTruth']
+    camera_type = estimate_data['cameraType']
+    adjacent_ims = estimate_data['adjacentIms']
+    start_im = np.squeeze(estimate_data['startIm'])
+    kitti_poses = estimate_data['rawPose'][:,3::4]
 
     plotTrajectory(estimates,ground_truth,kitti_poses,camera_type,adjacent_ims,start_im)
 
 
 if __name__ == "__main__":
     data_root = './saved_states'
-    h5_file = 'mostRecentEstimates_seq09.h5'
-    file_path = join(data_root,h5_file)
+    mat_file = 'mostRecentEstimates_seq09.mat'
+    file_path = join(data_root,mat_file)
 
     main(file_path)

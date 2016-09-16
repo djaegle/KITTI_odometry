@@ -1,5 +1,5 @@
 local util = require 'util'
-require 'hdf5'
+local matio = require 'matio'
 
 function outputEstimates(estimates,groundTruth,cameraType,adjacentIms,startIm,seqno,opt)
    -- Write out estimates and ground truth for a given sequence.
@@ -12,14 +12,9 @@ function outputEstimates(estimates,groundTruth,cameraType,adjacentIms,startIm,se
    groundTruthClean = util.unnormalize(groundTruthClean,opt)
 
    -- Save to a python-readable format
-   local recentEstimates = hdf5.open(string.format("%s/mostRecentEstimates_seq%02d.h5",opt.save,seqno),'w')
-   recentEstimates:write('estimates',estimatesClean)
-   recentEstimates:write('groundTruth',groundTruthClean)
-   recentEstimates:write('rawPose',posegraph.posesSeqs[seqno+1]) -- compensate for lua indexing
-   recentEstimates:write('cameraType',cameraType)
-   recentEstimates:write('adjacentIms',adjacentIms)
-   recentEstimates:write('startIm',startIm)
-   recentEstimates:close()
+   matio.save(string.format("%s/mostRecentEstimates_seq%02d.mat",opt.save,seqno),
+      {estimates=estimatesClean,groundTruth=groundTruthClean,rawPose=posegraph.posesSeqs[seqno+1],
+      cameraType=cameraType,adjacentIms=adjacentIms,startIm=startIm})
 end
 
 

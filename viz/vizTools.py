@@ -7,7 +7,6 @@ from os.path import join
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 import sys
-import pdb
 
 def eul2Rot(euls):
     """
@@ -39,8 +38,6 @@ def eul2Rot(euls):
 
     return rot_mat
 
-
-
 def transformsToTrajectory(transform_sequence,sequence_type):
     """
     Converts a sequence of 3D trajectories (e.g. translation or translations+euler angles)
@@ -66,7 +63,6 @@ def transformsToTrajectory(transform_sequence,sequence_type):
         else:
             raise ValueError('Sequence type %s not defined.' %sequence_type)
 
-        # pdb.set_trace()
         rot_accum = np.dot(rot_accum,rot_i)
 
         # Use the transformation at index trans_i
@@ -144,13 +140,7 @@ def getRawErrors(estimates,ground_truth):
     rotmats_estimate = eul2Rot(estimates[:,3:].T)
     rotmats_gt = eul2Rot(ground_truth[:,3:].T)
 
-    # And get the error
-    #TODO: implement this efficiently
-    pdb.set_trace()
-    # e.g. something like np.einsum('jik,ijl->ijk',rotmats_estimate,rotmats_gt)
-
     for i in xrange(rot_errors.shape[0]):
-        # TODO: check that this inversion is stable
         coserr = (np.trace(np.dot(eul2Rot(estimates[i,3:]).T,eul2Rot(ground_truth[i,3:]))) - 1) / 2
         # To account for numerical instability, just round to -1 or 1
         coserr = min(coserr,1)
@@ -162,29 +152,6 @@ def getRawErrors(estimates,ground_truth):
     return distances, trans_errors, rot_errors
 
 
-def plotPathAverageErrors(estimates,ground_truth,camera_type,adjacent_ims,start_im,no_aug=False):
-    """
-    Plots summary statistics for an entire sequence for translation and rotation.
-    Computed as in eqs. 2 and 3 in Geiger et al CVPR 2012. Binned and histogrammed
-    to produce the plots shown on the KITTI website.
-    """
-    if no_aug:
-        #TODO: implement this - should adjust filterPathTransforms appropriately
-        raise ValueError('Filtering not yet implemented for path averaging')
-
-    distances, trans_errors, rot_errors = getRawErrors(estimates,ground_truth)
-
-    # TODO: implement the following: (accumulated speed needs sample times to calculate speed)
-    # Compute accumulated translation distance errors
-    # Get instantaneous translation speed errors
-    # Get accumulated rotation distance errors
-    # Get instantaneous rotation speed errors
-
-
-
-    pass
-
-
 def main(file_path):
     estimate_data = h5py.File(file_path,'r')
     estimates = estimate_data['estimates'][:]
@@ -194,13 +161,11 @@ def main(file_path):
     start_im = estimate_data['startIm'][:]
     kitti_poses = estimate_data['rawPose'][:][:,3::4]
 
-    #TODO: use estimated poses if they're present.
     plotTrajectory(estimates,ground_truth,kitti_poses,camera_type,adjacent_ims,start_im)
 
 
 if __name__ == "__main__":
     data_root = './saved_states'
-    # pdb.set_trace()
     h5_file = 'mostRecentEstimates_seq09.h5'
     file_path = join(data_root,h5_file)
 

@@ -1,4 +1,4 @@
-# Training and testing models for end-to-end KITTI odometry
+# Training and testing models for end-to-end KITTI odometry in Torch.
 
 Non-standard dependencies:
 Torch packages [matio](https://github.com/soumith/matio-ffi.torch), [hdf5](https://github.com/deepmind/torch-hdf5)

@@ -10,7 +10,7 @@ A sample script is provided to train a basic model architecture on one KITTI sub
 ##To run the sample script:
 ./sample-train-test.sh
 
-To train a model with the default settings (only recommended when using full KITTI)
+##To train a model with the default settings (only recommended when using full KITTI):
 th ./train-kitti-net.lua
 
 Command-line options are listed in setup.lua.

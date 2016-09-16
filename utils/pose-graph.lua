@@ -7,7 +7,7 @@ local matio = require 'matio'
 -- Pose graph functions
 ------------------------------------------------------
 posegraph = {}
-posegraph.location = "./PoseGraph/"
+posegraph.location = "./KITTIData/PoseGraph/"
 posegraph.posesSeqs = matio.load(posegraph.location .. "poses.mat","P")
 posegraph.camOffset = { torch.Tensor({0, 0, 0}),
                            torch.Tensor({((3.798145e+02)/(7.070912e+02)), 0, 0})};
